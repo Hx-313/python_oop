@@ -19,3 +19,5 @@ haval = Haval("H6", 2025, True, "Red") # brand "Haval" is filled in by inheritan
 
 print(haval.driving())       # inherited method: prints the driving message
 print(haval.get_car_info())  # inherited method: prints the full info summary
+haval.clean_driving()       # inherited method: prints the driving message
+haval.clean_car_info()      # inherited method: prints the full info summary
