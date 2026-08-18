@@ -19,7 +19,8 @@ class Cars:
         self.year = year
         self.for_sale = for_sale
         self.color = color
-
+    def display_info(self):
+        print(f"{self.brand} {self.model} ({self.year}) - Color: {self.color}, For Sale: {self.for_sale}")
 
 # LuxuryVehicle is a child of Cars - it inherits all car attributes via super()
 class LuxuryVehicle(Cars):
@@ -31,7 +32,7 @@ class LuxuryVehicle(Cars):
 
     # display_info() shows the inherited car details plus the luxury features
     def display_info(self):
-        print(f"{self.brand} {self.model} ({self.year}) - Color: {self.color}, For Sale: {self.for_sale}")
+        super().display_info()
         print(f"Luxury Features: {', '.join(self.luxury_features)}")  # join() turns the list into a comma-separated string
 
 
@@ -44,7 +45,7 @@ class SportsVehicle(Cars):
 
     # display_info() shows the inherited car details plus the top speed
     def display_info(self):
-        print(f"{self.brand} {self.model} ({self.year}) - Color: {self.color}, For Sale: {self.for_sale}")
+        super().display_info()
         print(f"Top Speed: {self.top_speed} km/h")
 
 
@@ -56,7 +57,7 @@ class Hatchback(Cars):
 
     # display_info() shows the inherited car details plus the cargo space
     def display_info(self):
-        print(f"{self.brand} {self.model} ({self.year}) - Color: {self.color}, For Sale: {self.for_sale}")
+        super().display_info()
         print(f"Cargo Space: {self.cargo_space} liters")
 
 class SUV(Cars):
@@ -67,7 +68,7 @@ class SUV(Cars):
 
     # display_info() shows the inherited car details plus the off-road capability
     def display_info(self):
-        print(f"{self.brand} {self.model} ({self.year}) - Color: {self.color}, For Sale: {self.for_sale}")
+        super().display_info()
         print(f"Off-Road Capability: {self.offroad_capability}")
 
 # Creating a SportsVehicle - only 6 args needed because super() handles the shared setup
