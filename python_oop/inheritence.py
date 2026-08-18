@@ -3,6 +3,12 @@
 # Inheritance lets a new class (child) reuse
 # the code of an existing class (parent).
 # Here Haval inherits everything from Cars.
+#
+# Key Concepts:
+#   1. Parent Class (Cars) - provides the base attributes and methods
+#   2. Child Class (Haval) - inherits everything from the parent for free
+#   3. super().__init__()  - calls the parent's constructor to reuse its setup
+#   4. Method Overriding   - Haval redefines driving() with its own custom message
 #----------------------------------------
 
 from cars import Cars # import the parent class from cars.py

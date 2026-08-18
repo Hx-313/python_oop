@@ -2,6 +2,12 @@
 # Lesson: Classes (Object Oriented Programming)
 # A class is a blueprint for creating objects.
 # Each object created from this class is a Car.
+#
+# Key Concepts:
+#   1. Class Attribute  - belongs to the class, shared by ALL objects (working_year, cars_created)
+#   2. Instance Attribute - belongs to ONE object, set in __init__ (brand, model, year, etc.)
+#   3. Constructor (__init__) - runs automatically when a new object is created
+#   4. Methods - functions inside a class that act on the object's data
 #----------------------------------------
 
 class Cars:

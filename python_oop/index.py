@@ -1,6 +1,13 @@
 #----------------------------------------
-# Main program: using the Cars and Haval classes
-# This is where the objects (actual cars) are created and used.
+# Lesson: Putting It All Together (Main Program)
+# This is the entry point that uses the Cars and Haval classes.
+# It shows how objects (actual cars) are created and their methods called.
+#
+# Key Concepts:
+#   1. Importing Classes - bring Cars and Haval in from their own files
+#   2. Creating Objects   - Cars(...) runs __init__ and returns an instance
+#   3. Calling Methods    - object_name.method_name() uses the object's data
+#   4. Inherited Methods  - Haval uses Cars' methods without rewriting them
 #----------------------------------------
 
 from cars import Cars        # import the Cars class from cars.py
