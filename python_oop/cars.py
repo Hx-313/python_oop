@@ -9,6 +9,8 @@ class Cars:
         self.for_sale = for_sale
         self.color = color
         Cars.cars_created += 1
+    def driving(self):
+        return f"{self.brand} {self.model} is getting driven around {self.year}"
 
     def get_car_info(self):
         return f"{self.brand} {self.model} ({self.year}) - Color: {self.color}, For Sale: {self.for_sale}, Working year: {Cars.working_year}, Cars Created so far: {Cars.cars_created}"
