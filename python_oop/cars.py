@@ -23,10 +23,17 @@ class Cars:
     # It returns a formatted message about this car being driven
     def driving(self):
         return f"{self.brand} {self.model} is getting driven around {self.year}" # f-string: injects variable values into the text
+
+
     def clean_driving(self):
         print( f"{self.brand} {self.model} is getting driven around {self.year}")
+
+
+
     # This method returns a full summary of the car
     def get_car_info(self):
         return f"{self.brand} {self.model} ({self.year}) - Color: {self.color}, For Sale: {self.for_sale}, Working year: {Cars.working_year}, Cars Created so far: {Cars.cars_created}" # combines instance + class attributes
+
+
     def clean_car_info(self):
         print(f"{self.brand} {self.model} ({self.year}) - Color: {self.color}, For Sale: {self.for_sale}, Working year: {Cars.working_year}, Cars Created so far: {Cars.cars_created}")

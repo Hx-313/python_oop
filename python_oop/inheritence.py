@@ -14,3 +14,6 @@ class Haval(Cars): # Haval is the child class; (Cars) means it inherits from Car
         # super().__init__ calls the parent (Cars) __init__,
         # passing "Haval" as the brand automatically
         super().__init__("Haval", model, year, for_sale, color)
+
+    def driving(self):
+        return f"Haval {self.model} is getting driven around {self.year} (Haval version)" # overrides the parent method with a custom message
