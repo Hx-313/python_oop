@@ -64,3 +64,50 @@ class Car:
 car = Car("Toyota", "Camry", 2020, "Red", 300, "V6", 18, "Alloy")
 car.display_info()
 print(car.brand)
+
+#----------------------------------------
+# BONUS: Nested Classes
+# A class can also be DEFINED INSIDE another class.
+# This is the strongest form of composition - the inner class only
+# makes sense inside the outer class, so it is declared there.
+#
+# Key Concepts:
+#   1. Inner Class - Engine and Wheels are defined inside Car (nested)
+#   2. Access Path - inner classes are reached through the outer class:
+#      Car.Engine, Car.Wheels
+#   3. Same OWNS-A Lifetime - the inner classes still live and die with the owner
+#   4. Instance Still Created In __init__ - nesting only changes WHERE the
+#      class is declared, not how it is used
+#----------------------------------------
+
+class Car2:
+    # Nested classes are defined inside the owner class body
+    class Engine:
+        def __init__(self, horse_power, type):
+            self.horse_power = horse_power
+            self.type = type
+
+    class Wheels:
+        def __init__(self, size, type):
+            self.size = size
+            self.type = type
+
+    def __init__(self, brand, model, year, color, horse_power, engine_type, size, wheel_type):
+        self.brand = brand
+        self.model = model
+        self.year = year
+        self.color = color
+        # same composition pattern - parts are created inside the constructor,
+        # but now they are built from the NESTED classes
+        self.engine = Car2.Engine(horse_power, engine_type)
+        self.wheels = [Car2.Wheels(size, wheel_type) for _ in range(4)]
+
+    def display_info(self):
+        print(f"Car: {self.brand} {self.model} ({self.year}) - Color: {self.color}")
+        print(f"Engine: {self.engine.horse_power} HP, Type: {self.engine.type}")
+        print(f"Wheels: {len(self.wheels)} wheels of size {self.wheels[0].size} and type {self.wheels[0].type}")
+
+# Nested classes are accessed through the outer class: Car2.Engine / Car2.Wheels
+car2 = Car2("Honda", "Civic", 2021, "Blue", 158, "Turbo", 17, "Steel")
+car2.display_info()
+print(f"Nested classes live inside Car2: {Car2.Engine} , {Car2.Wheels}")
