@@ -58,11 +58,11 @@ class Showroom:
     def check_Availability(self, model):
         for car in self.cars:
             if model.lower() in car.model.lower():
-                return f"This model is in the Showroom {'but already booked' if car.booked else 'and Available to buy'}"
+                return f"{car.company} {car.model}  is in the Showroom {'but already booked' if car.booked else 'and Available to buy'}"
 
         for bike in self.bikes:
             if model.lower() in bike.model.lower():
-                return f"This model is in the Showroom {'but already booked' if bike.booked else 'and Available to buy'}"
+                return f"{bike.company} {bike.model} is in the Showroom {'but already booked' if bike.booked else 'and Available to buy'}"
 
         return "This model is not available"
 
@@ -98,8 +98,11 @@ bike2 = Bikes("Honda", "CBR 250", "2023", "Black", 250, True)
 bike3 = Bikes("Yamaha", "MT-07", "2024", "Blue", 689, False)
 
 print(f"Welcome to {showroom.name}")
-print(showroom.show_bikes())
-print(showroom.show_cars())
+for bike in showroom.show_bikes():
+    print(bike)
+
+for car in showroom.show_cars():
+    print(car)
 
 showroom.add_bike(bike1)
 showroom.add_bike(bike2)
@@ -108,8 +111,19 @@ showroom.add_car(car1)
 showroom.add_car(car2)
 showroom.add_car(car3)
 
-print(showroom.show_bikes())
-print(showroom.show_cars())
+print("#------------------------------------------")
+print("\tAvaialble Cars and bikes")
+print("#------------------------------------------")
+
+
+for bike in showroom.show_bikes():
+    print(bike)
+
+for car in showroom.show_cars():
+    print(car)
+
+
+
 
 model = input("Enter the model of the bike or car you want to check: ")
 
