@@ -13,6 +13,7 @@ Run:
 import csv
 import importlib.util
 import os
+from pathlib import Path
 import re
 import socket
 import string
@@ -64,6 +65,8 @@ MAX_CANDIDATES = 10000
 TLD = ".com"
 
 OUTPUT_FILE = "company_name_results.csv"
+
+MARKDOWN_OUTPUT_FILE = "company_name_recommendations.md"
 
 REQUEST_TIMEOUT = 8
 
@@ -895,11 +898,56 @@ def save_results(results):
             writer.writerow(result)
 
 
+def initialize_markdown_output(path=MARKDOWN_OUTPUT_FILE):
+    """Start a fresh Markdown report for the current research run."""
+
+    Path(path).write_text(
+        "# Company Name Recommendations\n\n"
+        "Generated one candidate at a time by the company name researcher.\n\n",
+        encoding="utf-8",
+    )
+
+
+def append_markdown_recommendation(result, path=MARKDOWN_OUTPUT_FILE, strong=False):
+    """Append one researched candidate so it is visible immediately."""
+
+    output_path = Path(path)
+    if not output_path.exists() or output_path.stat().st_size == 0:
+        initialize_markdown_output(output_path)
+
+    def value(field, fallback="Not available"):
+        current = result.get(field, fallback)
+        return current if current not in (None, "") else fallback
+
+    section = (
+        f"## {value('display_name', result.get('name', 'Unnamed'))}\n\n"
+        f"- **Strong candidate:** {'Yes' if strong else 'No'}\n"
+        f"- **Style:** {value('name_style')}\n"
+        f"- **Roots:** {value('roots')}\n"
+        f"- **Meanings:** {value('meanings')}\n"
+        f"- **Languages:** {value('languages')}\n"
+        f"- **Domain:** `{value('domain')}`\n"
+        f"- **Domain status:** {value('domain_status')}\n"
+        f"- **DNS:** {'Yes' if result.get('dns') else 'No'}\n"
+        f"- **Website:** {'Yes' if result.get('website') else 'No'}\n"
+        f"- **Search results:** {value('search_results', 0)}\n"
+        f"- **Exact matches:** {value('exact_matches', 0)}\n"
+        f"- **Brand score:** {value('brand_score', 0)}/100\n"
+        f"- **Opportunity score:** {value('opportunity_score', 0)}/100\n\n"
+        "---\n\n"
+    )
+
+    with output_path.open("a", encoding="utf-8") as file:
+        file.write(section)
+
+
 # ============================================================
 # MAIN
 # ============================================================
 
 def main():
+
+    initialize_markdown_output()
 
     print()
     print("=" * 70)
@@ -970,12 +1018,19 @@ def main():
         # Keep promising names
         # ----------------------------------------------------
 
-        if (
+        is_strong_candidate = (
             result["domain_status"]
             == "POTENTIALLY_AVAILABLE"
             and result["opportunity_score"] >= 70
             and result["exact_matches"] == 0
-        ):
+        )
+
+        append_markdown_recommendation(
+            result,
+            strong=is_strong_candidate,
+        )
+
+        if is_strong_candidate:
 
             print(
                 "   ⭐ STRONG CANDIDATE"

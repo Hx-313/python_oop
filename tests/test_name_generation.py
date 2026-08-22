@@ -26,6 +26,41 @@ class NameGenerationTests(unittest.TestCase):
 
         self.assertGreater(meaningful, phonetic)
 
+    def test_recommendation_is_appended_as_markdown(self):
+        result = {
+            "display_name": "Luma",
+            "name": "luma",
+            "name_style": "direct",
+            "roots": "luma",
+            "meanings": "light",
+            "languages": "Latin-inspired",
+            "domain": "luma.com",
+            "domain_status": "POTENTIALLY_AVAILABLE",
+            "dns": False,
+            "website": False,
+            "website_status": "",
+            "website_url": "",
+            "website_title": "",
+            "search_results": 0,
+            "exact_matches": 0,
+            "brand_score": 100,
+            "opportunity_score": 95,
+        }
+
+        output_path = Path(__file__).parent / "test_recommendations.md"
+        try:
+            MODULE.append_markdown_recommendation(result, output_path, strong=True)
+
+            markdown = output_path.read_text(encoding="utf-8")
+        finally:
+            output_path.unlink(missing_ok=True)
+
+        self.assertIn("# Company Name Recommendations", markdown)
+        self.assertIn("## Luma", markdown)
+        self.assertIn("**Strong candidate:** Yes", markdown)
+        self.assertIn("light", markdown)
+        self.assertIn("luma.com", markdown)
+
 
 if __name__ == "__main__":
     unittest.main()
