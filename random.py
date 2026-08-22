@@ -11,6 +11,7 @@ Run:
 """
 
 import csv
+import argparse
 import importlib.util
 import os
 from pathlib import Path
@@ -67,6 +68,8 @@ TLD = ".com"
 OUTPUT_FILE = "company_name_results.csv"
 
 MARKDOWN_OUTPUT_FILE = "company_name_recommendations.md"
+
+LIKED_OUTPUT_FILE = "liked_company_names.md"
 
 REQUEST_TIMEOUT = 8
 
@@ -899,13 +902,15 @@ def save_results(results):
 
 
 def initialize_markdown_output(path=MARKDOWN_OUTPUT_FILE):
-    """Start a fresh Markdown report for the current research run."""
+    """Create the Markdown report without erasing earlier recommendations."""
 
-    Path(path).write_text(
-        "# Company Name Recommendations\n\n"
-        "Generated one candidate at a time by the company name researcher.\n\n",
-        encoding="utf-8",
-    )
+    output_path = Path(path)
+    if not output_path.exists() or output_path.stat().st_size == 0:
+        output_path.write_text(
+            "# Company Name Recommendations\n\n"
+            "Generated one candidate at a time by the company name researcher.\n\n",
+            encoding="utf-8",
+        )
 
 
 def append_markdown_recommendation(result, path=MARKDOWN_OUTPUT_FILE, strong=False):
@@ -921,6 +926,7 @@ def append_markdown_recommendation(result, path=MARKDOWN_OUTPUT_FILE, strong=Fal
 
     section = (
         f"## {value('display_name', result.get('name', 'Unnamed'))}\n\n"
+        "- [ ] Keep this name\n"
         f"- **Strong candidate:** {'Yes' if strong else 'No'}\n"
         f"- **Style:** {value('name_style')}\n"
         f"- **Roots:** {value('roots')}\n"
@@ -939,6 +945,33 @@ def append_markdown_recommendation(result, path=MARKDOWN_OUTPUT_FILE, strong=Fal
 
     with output_path.open("a", encoding="utf-8") as file:
         file.write(section)
+
+
+def collect_liked_names(
+    source=MARKDOWN_OUTPUT_FILE,
+    output=LIKED_OUTPUT_FILE,
+):
+    """Copy manually checked recommendation sections into a separate file."""
+
+    source_text = Path(source).read_text(encoding="utf-8")
+    sections = re.split(r"(?=^## )", source_text, flags=re.MULTILINE)
+    liked_sections = [
+        section
+        for section in sections
+        if re.search(r"^- \[[xX]\] Keep this name$", section, re.MULTILINE)
+    ]
+
+    liked_text = (
+        "# Liked Company Names\n\n"
+        "Names manually marked with `[x]` in the recommendations file.\n\n"
+    )
+    if liked_sections:
+        liked_text += "\n".join(liked_sections).rstrip() + "\n"
+    else:
+        liked_text += "No names have been marked yet.\n"
+
+    Path(output).write_text(liked_text, encoding="utf-8")
+    return len(liked_sections)
 
 
 # ============================================================
@@ -1088,4 +1121,18 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(
+        description="Generate and research meaningful company names."
+    )
+    parser.add_argument(
+        "--collect-liked",
+        action="store_true",
+        help="copy names marked [x] into liked_company_names.md",
+    )
+    args = parser.parse_args()
+
+    if args.collect_liked:
+        count = collect_liked_names()
+        print(f"Collected {count} liked name(s) into {LIKED_OUTPUT_FILE}")
+    else:
+        main()

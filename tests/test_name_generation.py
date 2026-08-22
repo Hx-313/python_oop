@@ -61,6 +61,45 @@ class NameGenerationTests(unittest.TestCase):
         self.assertIn("light", markdown)
         self.assertIn("luma.com", markdown)
 
+    def test_checked_recommendations_are_collected(self):
+        source_path = Path(__file__).parent / "test_recommendations.md"
+        liked_path = Path(__file__).parent / "test_liked_names.md"
+        result = {
+            "display_name": "Luma",
+            "name": "luma",
+            "name_style": "direct",
+            "roots": "luma",
+            "meanings": "light",
+            "languages": "Latin-inspired",
+            "domain": "luma.com",
+            "domain_status": "POTENTIALLY_AVAILABLE",
+            "dns": False,
+            "website": False,
+            "search_results": 0,
+            "exact_matches": 0,
+            "brand_score": 100,
+            "opportunity_score": 95,
+        }
+
+        try:
+            MODULE.initialize_markdown_output(source_path)
+            MODULE.append_markdown_recommendation(result, source_path)
+            source_path.write_text(
+                source_path.read_text(encoding="utf-8").replace(
+                    "- [ ] Keep this name", "- [x] Keep this name"
+                ),
+                encoding="utf-8",
+            )
+
+            MODULE.collect_liked_names(source_path, liked_path)
+            liked = liked_path.read_text(encoding="utf-8")
+
+            self.assertIn("## Luma", liked)
+            self.assertIn("luma.com", liked)
+        finally:
+            source_path.unlink(missing_ok=True)
+            liked_path.unlink(missing_ok=True)
+
 
 if __name__ == "__main__":
     unittest.main()
